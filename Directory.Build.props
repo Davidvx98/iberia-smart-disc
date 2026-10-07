@@ -1,0 +1,26 @@
+<Project>
+  <!-- Valores comunes a todos los proyectos. La versión se cambia solo aquí. -->
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <Company>Iberia Custom DVDs</Company>
+    <Product>Iberia Smart Disc</Product>
+    <Authors>Iberia Custom DVDs</Authors>
+    <Copyright>© 2026 Iberia Custom DVDs</Copyright>
+    <NeutralLanguage>es-ES</NeutralLanguage>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <!-- La versión del .exe no lleva el commit: es la misma con o sin git. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- Sin SourceLink: mientras viva dentro de otro repositorio, el .pdb apuntaría a él. -->
+    <EnableSourceLink>false</EnableSourceLink>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+  </PropertyGroup>
+
+  <!-- Sin rutas de la máquina que compila dentro del .exe ni del .pdb. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=/_/</PathMap>
+  </PropertyGroup>
+</Project>

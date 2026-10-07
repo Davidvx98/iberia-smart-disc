@@ -1,0 +1,17 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "discId": "ICD-MI-JUEGO-R2W8Q",
+  "discType": "data-disc",
+  "game": {
+    "id": "mi-juego",
+    "name": "Mi Juego"
+  },
+  "discLaunch": {
+    "mode": "executable",
+    "path": "Game\\Game.exe"
+  },
+  "artwork": {
+    "cover": "cover.png"
+  }
+}

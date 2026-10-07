@@ -1,0 +1,13 @@
+PORTAL 2 · IBERIA CUSTOM EDITION
+================================
+
+Este disco es un Smart Disc de Iberia Custom DVDs: no contiene el juego,
+sirve para abrirlo al meterlo en el lector, como en una consola.
+
+1. Descarga Iberia Smart Disc desde https://iberiacustomdvd.es
+2. Ejecútalo una vez y pulsa «Instalar» (no pide permisos de administrador).
+3. Mete el disco: se abrirá Portal 2 con Steam, GOG, Epic o el ejecutable
+   que elijas.
+
+Iberia Smart Disc no recopila datos, no necesita cuenta y funciona sin
+Internet. Su código es público.

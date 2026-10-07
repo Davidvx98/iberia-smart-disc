@@ -1,0 +1,21 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "game": {
+    "id": "juego",
+    "name": "Pokémon: Edición Ñandú 東方",
+    "edition": "Edición «Coleccionista»"
+  },
+  "local": {
+    "folders": [
+      "Juego (2004)"
+    ],
+    "executables": [
+      "Ñandú.exe"
+    ]
+  },
+  "artwork": {
+    "cover": "Carátulas/portada.JPEG",
+    "icon": "icon.ico"
+  }
+}

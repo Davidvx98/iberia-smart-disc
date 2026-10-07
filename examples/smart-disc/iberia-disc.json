@@ -1,0 +1,25 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "discId": "ICD-PORTAL-2-K7P4M",
+  "discType": "smart-disc",
+  "game": {
+    "id": "portal-2",
+    "name": "Portal 2",
+    "edition": "Iberia Custom Edition"
+  },
+  "platforms": {
+    "steam": { "appId": 620 },
+    "gog": { "productId": null },
+    "epic": { "appName": null }
+  },
+  "local": {
+    "executables": ["portal2.exe"],
+    "folders": ["Portal 2"]
+  },
+  "artwork": {
+    "cover": "cover.png",
+    "icon": "icon.ico"
+  },
+  "discLaunch": null
+}

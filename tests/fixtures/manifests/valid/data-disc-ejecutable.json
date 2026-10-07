@@ -1,0 +1,14 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "game": {
+    "id": "juego",
+    "name": "Juego"
+  },
+  "discType": "data-disc",
+  "discLaunch": {
+    "mode": "executable",
+    "path": "Game\\Game.exe",
+    "arguments": "-windowed"
+  }
+}

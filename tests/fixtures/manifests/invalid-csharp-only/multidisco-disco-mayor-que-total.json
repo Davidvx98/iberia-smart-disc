@@ -1,0 +1,12 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "game": {
+    "id": "juego",
+    "name": "Juego"
+  },
+  "discSet": {
+    "disc": 3,
+    "total": 2
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "gameId": "portal2",
+  "name": "Portal 2",
+  "platforms": {
+    "steam": {
+      "appId": "620"
+    }
+  }
+}

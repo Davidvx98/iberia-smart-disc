@@ -1,0 +1,13 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "game": {
+    "id": "juego",
+    "name": "Juego"
+  },
+  "local": {
+    "executables": [
+      "bin\\x.exe"
+    ]
+  }
+}

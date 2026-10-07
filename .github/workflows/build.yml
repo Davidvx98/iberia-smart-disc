@@ -1,0 +1,133 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# Acciones fijadas por commit (la etiqueta va en el comentario). Dependabot las mantiene al día.
+jobs:
+  test:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+
+      - name: SDK usado
+        run: dotnet --info
+
+      - name: Tests del núcleo
+        run: |
+          dotnet restore tests/IberiaSmartDisc.Core.Tests --locked-mode
+          dotnet test tests/IberiaSmartDisc.Core.Tests -c Release --no-restore
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: El esquema JSON coincide con el validador del programa
+        run: |
+          python -m pip install --only-binary=:all: jsonschema==4.23.0
+          python tools/check-schema.py
+
+      - name: Nada que no deba publicarse (rutas locales, correos, claves, caracteres invisibles)
+        run: python tools/check-publicacion.py
+
+  # El .exe que se publica se compila aparte, sin ejecutar paquetes de terceros de los tests.
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+
+      - name: SDK usado
+        run: dotnet --info
+
+      - name: Compilar
+        run: dotnet build src/IberiaSmartDisc/IberiaSmartDisc.csproj -c Release -p:ContinuousIntegrationBuild=true
+
+      # Aquí iría la firma Authenticode cuando exista, en un entorno protegido y solo para etiquetas.
+      # Las claves se configuran como secretos del repositorio, nunca en el código.
+
+      - name: Preparar artefacto
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item src/IberiaSmartDisc/bin/Release/net48/IberiaSmartDisc.exe dist/
+          Copy-Item LICENSE dist/
+          $hash = (Get-FileHash dist/IberiaSmartDisc.exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  IberiaSmartDisc.exe" | Out-File -Encoding ascii dist/IberiaSmartDisc.exe.sha256
+          Get-Content dist/IberiaSmartDisc.exe.sha256
+
+      # Los pull requests no publican binarios: un .exe no oficial con nombre oficial confunde.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: github.event_name == 'push'
+        with:
+          name: IberiaSmartDisc
+          path: dist/
+          retention-days: 14
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test, build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Comprobar la etiqueta
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Etiqueta con formato no válido: $TAG"; exit 1; }
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          [[ "v$version" == "$TAG" ]] || { echo "La etiqueta $TAG no coincide con <Version>$version</Version>"; exit 1; }
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || { echo "La etiqueta debe apuntar a un commit de main"; exit 1; }
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: IberiaSmartDisc
+          path: dist
+
+      # Atestación de procedencia: gh attestation verify IberiaSmartDisc.exe -R <owner>/<repo>
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/IberiaSmartDisc.exe
+
+      - name: Publicar en Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: >
+          gh release create "$TAG" dist/IberiaSmartDisc.exe dist/IberiaSmartDisc.exe.sha256 dist/LICENSE
+          --repo "$GITHUB_REPOSITORY"
+          --title "Iberia Smart Disc ${TAG#v}"
+          --generate-notes

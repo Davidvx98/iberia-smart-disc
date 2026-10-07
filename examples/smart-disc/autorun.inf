@@ -1,0 +1,5 @@
+; Solo icono y nombre de la unidad en «Este equipo». Windows ya no ejecuta
+; nada desde autorun.inf y Iberia Smart Disc no lo usa: es pura presentación.
+[autorun]
+icon=icon.ico
+label=Portal 2

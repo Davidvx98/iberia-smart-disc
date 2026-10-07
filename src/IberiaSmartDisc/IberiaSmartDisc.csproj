@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    .NET Framework 4.8 viene de serie en Windows 10 (1903+) y Windows 11: el
+    usuario descarga un único .exe de menos de 1 MB y no instala ningún runtime.
+    Se puede compilar desde Windows, Linux o macOS con el SDK de .NET.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>IberiaSmartDisc</AssemblyName>
+    <RootNamespace>IberiaSmartDisc</RootNamespace>
+    <AssemblyTitle>Iberia Smart Disc</AssemblyTitle>
+    <Description>Abre tus juegos al insertar un disco de Iberia Custom DVDs.</Description>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Proceso de 64 bits en Windows de 64 bits: rutas y procesos sin redirecciones. -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- El núcleo se compila dentro del .exe para distribuir un solo archivo. -->
+    <Compile Include="..\IberiaSmartDisc.Core\**\*.cs"
+             Exclude="..\IberiaSmartDisc.Core\obj\**;..\IberiaSmartDisc.Core\bin\**"
+             LinkBase="Core" />
+    <EmbeddedResource Include="Resources\logo.png" LogicalName="IberiaSmartDisc.logo.png" />
+    <EmbeddedResource Include="Resources\app.ico" LogicalName="IberiaSmartDisc.app.ico" />
+    <EmbeddedResource Include="..\..\LICENSE" LogicalName="IberiaSmartDisc.LICENSE" />
+  </ItemGroup>
+</Project>

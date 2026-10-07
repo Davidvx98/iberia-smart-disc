@@ -1,0 +1,440 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "iberia-disc.json (formato 1)",
+  "description": "Manifiesto de los discos de Iberia Custom DVDs que lee Iberia Smart Disc. Debe coincidir con el validador del programa (src/IberiaSmartDisc.Core/Manifest): tests/fixtures/manifests lo comprueba en CI. Los campos desconocidos se ignoran; solo un cambio incompatible sube \"format\". Reglas que JSON Schema no puede expresar y el programa sí comprueba: discSet.disc <= discSet.total, sin caracteres de etiqueta ni de uso privado de los planos 14-16 (U+E0000 en adelante) y sin sustitutos sueltos. Los patrones siguen ECMA-262: un salto de línea final no casa con $.",
+  "type": "object",
+  "required": [
+    "iberiaDisc",
+    "format"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "iberiaDisc": {
+      "const": true
+    },
+    "format": {
+      "description": "Versión incompatible del formato. Esta especificación describe el 1.",
+      "const": 1
+    },
+    "discId": {
+      "description": "Copia o edición concreta. No usar números correlativos ni datos del cliente.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "discType": {
+      "enum": [
+        "smart-disc",
+        "data-disc",
+        null
+      ]
+    },
+    "game": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/gameId"
+        },
+        "name": {
+          "$ref": "#/$defs/displayText120"
+        },
+        "edition": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/displayText80"
+            }
+          ]
+        }
+      }
+    },
+    "gameId": {
+      "$ref": "#/$defs/gameId",
+      "description": "Alternativa antigua a game.id."
+    },
+    "name": {
+      "$ref": "#/$defs/displayText120",
+      "description": "Alternativa antigua a game.name."
+    },
+    "edition": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/displayText80"
+        }
+      ]
+    },
+    "platforms": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "steam": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "appId": {
+              "$ref": "#/$defs/numericIdOrNull"
+            },
+            "appIds": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "maxItems": 8,
+              "items": {
+                "$ref": "#/$defs/numericId"
+              }
+            }
+          }
+        },
+        "gog": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "productId": {
+              "$ref": "#/$defs/numericIdOrNull"
+            },
+            "productIds": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "maxItems": 8,
+              "items": {
+                "$ref": "#/$defs/numericId"
+              }
+            }
+          }
+        },
+        "epic": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "appName": {
+              "$ref": "#/$defs/epicTokenOrNull"
+            },
+            "namespace": {
+              "$ref": "#/$defs/epicTokenOrNull"
+            },
+            "catalogItemId": {
+              "$ref": "#/$defs/epicTokenOrNull"
+            }
+          }
+        }
+      }
+    },
+    "discLaunch": {
+      "description": "Solo en discos data-disc. El programa nunca ejecuta otro archivo que este y pregunta siempre antes de abrirlo. Los instaladores no admiten argumentos.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "mode",
+        "path"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "executable",
+            "installer"
+          ]
+        },
+        "path": {
+          "$ref": "#/$defs/discPath"
+        },
+        "arguments": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 512,
+          "pattern": "^[^\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]*$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "executable"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "\\.[Ee][Xx][Ee]$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "installer"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "\\.(?:[Ee][Xx][Ee]|[Mm][Ss][Ii])$"
+              },
+              "arguments": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "discSet": {
+      "description": "disc no puede ser mayor que total (lo comprueba el programa).",
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "disc",
+        "total"
+      ],
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "disc": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        }
+      }
+    },
+    "artwork": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "cover": {
+          "description": "PNG, JPEG o BMP en el disco (no WebP ni GIF).",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/discPath"
+                },
+                {
+                  "type": "string",
+                  "pattern": "\\.(?:[Pp][Nn][Gg]|[Jj][Pp][Ee]?[Gg]|[Bb][Mm][Pp])$"
+                }
+              ]
+            }
+          ]
+        },
+        "icon": {
+          "description": "ICO en el disco.",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/discPath"
+                },
+                {
+                  "type": "string",
+                  "pattern": "\\.[Ii][Cc][Oo]$"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "local": {
+      "description": "Pistas para «Buscar automáticamente» sin escanear todo el disco duro.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "executables": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^[^\\\\/:*?\"<>|\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]{1,96}\\.[Ee][Xx][Ee]$"
+          }
+        },
+        "folders": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^[^\\\\/:*?\"<>|\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]{0,99}[^\\\\/:*?\"<>|\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB. ]$"
+          }
+        }
+      }
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "game"
+      ]
+    },
+    {
+      "required": [
+        "gameId",
+        "name"
+      ]
+    }
+  ],
+  "if": {
+    "properties": {
+      "discType": {
+        "const": "smart-disc"
+      }
+    },
+    "required": [
+      "discType"
+    ]
+  },
+  "then": {
+    "properties": {
+      "discLaunch": {
+        "type": "null"
+      }
+    }
+  },
+  "$defs": {
+    "gameId": {
+      "description": "Slug del producto en la web: minúsculas, dígitos y guiones; máximo 64; no puede ser un nombre de dispositivo de Windows.",
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "not": {
+        "enum": [
+          "con",
+          "prn",
+          "aux",
+          "nul",
+          "com1",
+          "com2",
+          "com3",
+          "com4",
+          "com5",
+          "com6",
+          "com7",
+          "com8",
+          "com9",
+          "lpt1",
+          "lpt2",
+          "lpt3",
+          "lpt4",
+          "lpt5",
+          "lpt6",
+          "lpt7",
+          "lpt8",
+          "lpt9"
+        ]
+      }
+    },
+    "displayText120": {
+      "description": "Texto visible: algo más que espacios y sin caracteres de control, de dirección (bidi) ni invisibles.",
+      "type": "string",
+      "maxLength": 120,
+      "pattern": "^[^\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]*[^\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB\\s][^\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]*$"
+    },
+    "displayText80": {
+      "type": "string",
+      "maxLength": 80,
+      "pattern": "^[^\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]*[^\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB\\s][^\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]*$"
+    },
+    "numericId": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,11}$"
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      ]
+    },
+    "numericIdOrNull": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/numericId"
+        }
+      ]
+    },
+    "epicTokenOrNull": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9._-]{1,128}$"
+    },
+    "discPath": {
+      "description": "Ruta relativa a la raíz del disco. Por segmento: sin vacíos, sin '.' ni '..', sin espacio inicial ni punto o espacio final, sin caracteres no válidos en Windows ni invisibles y sin nombres reservados (CON, NUL, COM1\u2026).",
+      "type": "string",
+      "maxLength": 240,
+      "pattern": "^(?!(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9])(?:\\.|[\\\\/]|$))(?! )[^\\\\/:*?\"<>|\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]*[^\\\\/:*?\"<>|\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB. ](?:[\\\\/](?!(?:[Cc][Oo][Nn]|[Pp][Rr][Nn]|[Aa][Uu][Xx]|[Nn][Uu][Ll]|[Cc][Oo][Mm][1-9]|[Ll][Pp][Tt][1-9])(?:\\.|[\\\\/]|$))(?! )[^\\\\/:*?\"<>|\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB]*[^\\\\/:*?\"<>|\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u08E2\\u180E\\u200B-\\u200F\\u2028-\\u202E\\u2060-\\u206F\\uE000-\\uF8FF\\uFEFF\\uFFF9-\\uFFFB. ])*$"
+    }
+  }
+}

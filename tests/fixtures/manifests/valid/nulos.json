@@ -1,0 +1,23 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "game": {
+    "id": "juego",
+    "name": "Juego"
+  },
+  "discId": null,
+  "discType": null,
+  "platforms": {
+    "steam": null,
+    "gog": {
+      "productId": null
+    },
+    "epic": {
+      "appName": null
+    }
+  },
+  "discLaunch": null,
+  "artwork": {
+    "cover": null
+  }
+}

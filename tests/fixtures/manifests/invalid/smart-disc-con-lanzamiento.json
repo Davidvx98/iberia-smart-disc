@@ -1,0 +1,13 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "game": {
+    "id": "juego",
+    "name": "Juego"
+  },
+  "discType": "smart-disc",
+  "discLaunch": {
+    "mode": "executable",
+    "path": "Game.exe"
+  }
+}

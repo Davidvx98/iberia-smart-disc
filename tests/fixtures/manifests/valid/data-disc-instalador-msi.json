@@ -1,0 +1,13 @@
+{
+  "iberiaDisc": true,
+  "format": 1,
+  "game": {
+    "id": "juego",
+    "name": "Juego"
+  },
+  "discType": "data-disc",
+  "discLaunch": {
+    "mode": "installer",
+    "path": "Instalar/Setup.msi"
+  }
+}

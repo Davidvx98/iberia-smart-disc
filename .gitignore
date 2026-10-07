@@ -1,0 +1,28 @@
+# compilación
+bin/
+obj/
+dist/
+TestResults/
+*.binlog
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+launchSettings.json
+
+# claves de firma y secretos: nunca al repositorio
+*.pfx
+*.p12
+*.pvk
+*.snk
+*.pem
+*.key
+.env
+.env.*
+
+# imágenes de prueba generadas con tools/New-TestIso.ps1
+*.iso
+
+# datos del modo portátil
+IberiaSmartDisc-datos/

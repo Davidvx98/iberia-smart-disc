@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Lógica sin dependencias de Windows: manifiesto, plataformas, resolución y
+    configuración. Se compila como biblioteca para los tests (que corren en
+    cualquier sistema) y la app enlaza estos mismos .cs para salir en un único
+    ejecutable.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>IberiaSmartDisc.Core</RootNamespace>
+    <AssemblyName>IberiaSmartDisc.Core</AssemblyName>
+  </PropertyGroup>
+</Project>
