@@ -34,7 +34,7 @@ antes si se está explotando. Te citaremos en las notas de la versión si quiere
 ## Cómo verificar una descarga
 
 Descarga solo desde Releases de este repositorio o desde la web
-<https://iberiacustomdvd.es>. Antes de abrirla:
+<https://iberiacustomdvds.es/launcher>. Antes de abrirla:
 
 ```powershell
 Get-FileHash .\IberiaSmartDisc.exe -Algorithm SHA256

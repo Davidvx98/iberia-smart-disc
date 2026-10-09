@@ -478,7 +478,7 @@ namespace IberiaSmartDisc.UI
         {
             var lines = new List<string>
             {
-                AppInfo.Name + " " + AppInfo.VersionText + (_app.IsPortable ? " (portátil)" : string.Empty),
+                AppInfo.Name + " " + AppInfo.DisplayVersion + (_app.IsPortable ? " (portátil)" : string.Empty),
                 "Windows " + Environment.OSVersion.Version + (Environment.Is64BitOperatingSystem ? " 64 bits" : " 32 bits"),
                 "Lectores ópticos: " + string.Join(", ", OpticalDriveMonitor.CurrentOpticalRoots().DefaultIfEmpty("ninguno")),
                 "Detección: " + (_app.State.Settings.Paused ? "en pausa" : "activa") + (_app.State.Settings.CompatibilityPolling ? " · modo compatibilidad" : string.Empty),
@@ -548,7 +548,7 @@ namespace IberiaSmartDisc.UI
             column.Controls.Add(Theme.Row(test));
 
             column.Controls.Add(Theme.SectionTitle("Acerca de"));
-            column.Controls.Add(Theme.Label(AppInfo.Name + " " + AppInfo.VersionText + " · " + AppInfo.Publisher, Theme.Body, Theme.Text));
+            column.Controls.Add(Theme.Label(AppInfo.Name + " " + AppInfo.DisplayVersion + " · " + AppInfo.Publisher, Theme.Body, Theme.Text));
             column.Controls.Add(Theme.Label("Sin cuentas, sin publicidad y sin enviar datos: todo se queda en este PC.", Theme.Small, Theme.TextMuted, width));
             var web = Theme.Link(AppInfo.WebsiteLabel);
             web.LinkClicked += (s, e) => MainForm.OpenUrl(AppInfo.WebsiteUrl);

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using IberiaSmartDisc.Core.Common;
@@ -14,8 +15,8 @@ namespace IberiaSmartDisc
         public const string Name = "Iberia Smart Disc";
         public const string ExeName = "IberiaSmartDisc.exe";
         public const string Publisher = "Iberia Custom DVDs";
-        public const string WebsiteUrl = "https://iberiacustomdvd.es";
-        public const string WebsiteLabel = "IberiaCustomDVD.es";
+        public const string WebsiteUrl = "https://iberiacustomdvds.es";
+        public const string WebsiteLabel = "IberiaCustomDVDs.es";
         public const string RepositoryUrl = "https://github.com/Davidvx98/iberia-smart-disc";
 
         public static Version Version => typeof(AppInfo).Assembly.GetName().Version ?? new Version(0, 0, 0);
@@ -23,14 +24,24 @@ namespace IberiaSmartDisc
         /// <summary>Versión de tres partes, comparable con la del .exe instalado.</summary>
         public static Version ComparableVersion => new Version(Version.Major, Version.Minor, Math.Max(0, Version.Build));
 
-        public static string VersionText
+        /// <summary>Nombre público de la versión, incluido su sufijo.</summary>
+        public static string VersionText =>
+            typeof(AppInfo).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+            ?? ComparableVersion.ToString(3);
+
+        public static string ReleaseChannel
         {
             get
             {
-                var v = Version;
-                return v.Major + "." + v.Minor + "." + Math.Max(0, v.Build);
+                foreach (var metadata in typeof(AppInfo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>())
+                {
+                    if (metadata.Key == "ReleaseChannel") return metadata.Value ?? string.Empty;
+                }
+                return string.Empty;
             }
         }
+
+        public static string DisplayVersion => VersionText + (ReleaseChannel.Length > 0 ? " · " + ReleaseChannel : string.Empty);
     }
 
     /// <summary>

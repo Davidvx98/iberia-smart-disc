@@ -1,7 +1,13 @@
 <Project>
   <!-- Valores comunes a todos los proyectos. La versión se cambia solo aquí. -->
   <PropertyGroup>
-    <Version>0.1.0</Version>
+    <ReleaseVersion>0.0.1ab</ReleaseVersion>
+    <ReleaseChannel>BETA</ReleaseChannel>
+    <!-- NuGet/MSBuild usan SemVer; Windows necesita una versión numérica. -->
+    <Version>0.0.1-beta</Version>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
+    <InformationalVersion>$(ReleaseVersion)</InformationalVersion>
     <Company>Iberia Custom DVDs</Company>
     <Product>Iberia Smart Disc</Product>
     <Authors>Iberia Custom DVDs</Authors>
@@ -18,6 +24,13 @@
     <EnableSourceLink>false</EnableSourceLink>
     <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>ReleaseChannel</_Parameter1>
+      <_Parameter2>$(ReleaseChannel)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
 
   <!-- Sin rutas de la máquina que compila dentro del .exe ni del .pdb. -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

@@ -92,7 +92,7 @@ namespace IberiaSmartDisc.Setup
 
             using (var key = Registry.CurrentUser.CreateSubKey(KeyPath))
             {
-                key.SetValue("DisplayName", AppInfo.Name);
+                key.SetValue("DisplayName", AppInfo.Name + (AppInfo.ReleaseChannel.Length > 0 ? " (" + AppInfo.ReleaseChannel + ")" : string.Empty));
                 key.SetValue("DisplayVersion", AppInfo.VersionText);
                 key.SetValue("Publisher", AppInfo.Publisher);
                 key.SetValue("DisplayIcon", executable + ",0");

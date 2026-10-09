@@ -26,7 +26,7 @@ namespace IberiaSmartDisc.UI
             _mode = mode;
             _log = log;
             Theme.Prepare(this);
-            Text = AppInfo.Name;
+            Text = AppInfo.Name + " · " + AppInfo.DisplayVersion;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -40,7 +40,7 @@ namespace IberiaSmartDisc.UI
             header.Controls.Add(new PictureBox { Image = Theme.Logo, SizeMode = PictureBoxSizeMode.Zoom, Size = Theme.S(72, 72), Margin = Theme.Pad(0, 0, 16, 0) }, 0, 0);
             var titles = Theme.Column();
             titles.Controls.Add(Theme.Label(mode == InstallMode.Install ? "Instalar Iberia Smart Disc" : "Actualizar Iberia Smart Disc", Theme.Title, Theme.Text, width - Theme.S(90)));
-            titles.Controls.Add(Theme.Label("Versión " + AppInfo.VersionText, Theme.Body, Theme.TextMuted));
+            titles.Controls.Add(Theme.Label("Versión " + AppInfo.DisplayVersion, Theme.BodyBold, Theme.Accent));
             header.Controls.Add(titles, 1, 0);
             layout.Controls.Add(header);
 

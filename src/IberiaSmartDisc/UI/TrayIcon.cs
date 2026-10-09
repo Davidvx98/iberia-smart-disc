@@ -59,7 +59,7 @@ namespace IberiaSmartDisc.UI
         {
             bool paused = _app.State.Settings.Paused;
             _pause.Checked = paused;
-            _icon.Text = paused ? AppInfo.Name + " (en pausa)" : AppInfo.Name;
+            _icon.Text = AppInfo.Name + " · " + AppInfo.DisplayVersion + (paused ? " (en pausa)" : string.Empty);
         }
 
         private sealed class DarkMenuColors : ProfessionalColorTable

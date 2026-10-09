@@ -1,6 +1,9 @@
 # Iberia Smart Disc
 
-Mete un disco de [Iberia Custom DVDs](https://iberiacustomdvd.es) en el PC y
+**Primera versión pública: 0.0.1ab · BETA.** Puede contener errores; consulta
+las [notas de la versión](docs/releases/0.0.1ab.md).
+
+Mete un disco de [Iberia Custom DVDs](https://iberiacustomdvds.es) en el PC y
 se abre el juego, como en una consola.
 
 Iberia Smart Disc es un programa pequeño para Windows que se queda en segundo
@@ -24,7 +27,8 @@ están prohibidas; consulta la [licencia](LICENSE).
 
 ## Descargar
 
-[**Descargar la última versión**](https://github.com/Davidvx98/iberia-smart-disc/releases/latest/download/IberiaSmartDisc.exe)
+[**Descargar 0.0.1ab · BETA**](https://github.com/Davidvx98/iberia-smart-disc/releases/download/v0.0.1ab/IberiaSmartDisc.exe)
+· [Descarga en la web oficial](https://iberiacustomdvds.es/launcher)
 · [Todas las versiones](https://github.com/Davidvx98/iberia-smart-disc/releases)
 
 Requisitos: Windows 10 (versión 1903 o posterior) u 11.
@@ -38,7 +42,7 @@ Para actualizar, descarga la versión nueva y ábrela: conserva tu configuració
 
 > **Mientras el ejecutable no esté firmado:**
 > - Descárgalo solo de estos dos sitios: [Releases](https://github.com/Davidvx98/iberia-smart-disc/releases)
->   o <https://iberiacustomdvd.es>. Nunca de otra web ni de un enlace que te pasen.
+>   o <https://iberiacustomdvds.es>. Nunca de otra web ni de un enlace que te pasen.
 > - Comprueba la descarga como explica [SECURITY.md](SECURITY.md#cómo-verificar-una-descarga).
 > - Windows SmartScreen mostrará «Windows protegió su PC» hasta que el programa
 >   gane reputación.
@@ -87,9 +91,12 @@ dotnet build src/IberiaSmartDisc -c Release       # → src/IberiaSmartDisc/bin/
 - Agentes de Claude Code para auditar el proyecto: `.claude/agents/` y su
   contexto en `.claude/contexto-launcher.md`.
 
-Las versiones se publican creando una etiqueta `vX.Y.Z` que coincida con
-`<Version>` en `Directory.Build.props`: GitHub Actions compila, prueba y sube
-el `.exe` con su SHA-256.
+Las versiones se publican creando una etiqueta que coincida con
+`<ReleaseVersion>` en `Directory.Build.props` (por ejemplo, `v0.0.1ab`).
+`<ReleaseChannel>BETA</ReleaseChannel>` marca la publicación como preliminar
+y muestra BETA en la interfaz. GitHub Actions compila, prueba y sube el `.exe`
+con su SHA-256. La versión interna de Windows es numérica y la de NuGet usa
+SemVer; la versión pública del ejecutable conserva `0.0.1ab`.
 
 Solo se distribuye el `.exe` que compila GitHub Actions. No publiques un `.exe`
 compilado a mano ni subas la carpeta con el subidor web de GitHub: no respeta

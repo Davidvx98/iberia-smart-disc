@@ -30,7 +30,7 @@ namespace IberiaSmartDisc.UI
         {
             _app = app;
             Theme.Prepare(this);
-            Text = AppInfo.Name;
+            Text = AppInfo.Name + " · " + AppInfo.DisplayVersion;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
@@ -46,6 +46,7 @@ namespace IberiaSmartDisc.UI
             header.Controls.Add(new PictureBox { Image = Theme.Logo, SizeMode = PictureBoxSizeMode.Zoom, Size = Theme.S(56, 56), Margin = Theme.Pad(0, 0, 14, 0) }, 0, 0);
             var titles = Theme.Column();
             titles.Controls.Add(Theme.Label(AppInfo.Name, Theme.Title));
+            titles.Controls.Add(Theme.Label("v" + AppInfo.DisplayVersion, Theme.BodyBold, Theme.Accent));
             titles.Controls.Add(Theme.Label(firstRun ? "¡Listo! Mete un disco y a jugar." : "Mete tu disco y juega.", Theme.Body, Theme.TextMuted));
             header.Controls.Add(titles, 1, 0);
             layout.Controls.Add(header);
@@ -110,7 +111,7 @@ namespace IberiaSmartDisc.UI
             layout.Controls.Add(buttons);
 
             var footer = Theme.Label(
-                "Cerrar esta ventana no detiene la detección. v" + AppInfo.VersionText + (_app.IsPortable ? " · modo portátil" : string.Empty),
+                "Cerrar esta ventana no detiene la detección. v" + AppInfo.DisplayVersion + (_app.IsPortable ? " · modo portátil" : string.Empty),
                 Theme.Small, Theme.TextMuted, width);
             footer.Margin = Theme.Pad(0, 14, 0, 0);
             layout.Controls.Add(footer);
