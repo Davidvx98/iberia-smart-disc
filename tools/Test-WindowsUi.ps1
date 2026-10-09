@@ -1,4 +1,4 @@
-# Prueba las ventanas del .exe en Windows con .NET Framework (Windows PowerShell).
+﻿# Prueba las ventanas del .exe en Windows con .NET Framework (Windows PowerShell).
 # No instala el programa ni cambia el inicio con Windows.
 param([Parameter(Mandatory = $true)][string]$Executable)
 $ErrorActionPreference = 'Stop'
